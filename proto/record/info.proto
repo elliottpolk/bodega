@@ -1,0 +1,23 @@
+syntax = "proto3";
+package bodega.record;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/elliottpolk/bodega/record";
+
+message Info {
+	google.protobuf.Timestamp created = 1;
+	string created_by = 2;
+
+	google.protobuf.Timestamp updated = 3;
+	string updated_by = 4;
+
+	enum Status {
+		active = 0;
+		archived = 1;
+		invalid = 2;
+        cancelled = 3;
+	}
+
+	Status status = 5;
+}

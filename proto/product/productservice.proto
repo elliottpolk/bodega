@@ -1,0 +1,70 @@
+syntax = "proto3";
+package bodega.product;
+
+import "product/product.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/elliottpolk/bodega/product";
+
+message Empty {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+}
+
+message Request {
+  // unique identifier to help troubleshoot each request
+  string request_id = 1;
+
+  // username of the one making the request
+  string username = 2;
+
+  // unique identifier of the Product
+  string id = 3;
+
+  // dataset to process
+  repeated bodega.product.Product payload = 4;
+}
+
+message Response {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+
+  repeated bodega.product.Product payload = 2;
+}
+
+service Service {
+  // create new Product item(s)
+  rpc Create(Request) returns (Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/products"
+      body: "*"
+    };
+  }
+
+  // retrieve a list of Product items
+  rpc Retrieve(Request) returns (Response) {
+    option (google.api.http) = {
+      get: "/api/v1/products"
+
+      additional_bindings {
+        get: "/api/v1/products/{id}"
+      }
+    };
+  }
+
+  // update Product item(s)
+  rpc Update(Request) returns (Response) {
+    option (google.api.http) = {
+      put: "/api/v1/products/{id}"
+      body: "*"
+    };
+  }
+
+  // delete Product item(s)
+  rpc Delete(Request) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/products"
+      body: "*"
+    };
+  }
+}

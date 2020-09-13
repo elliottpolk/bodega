@@ -1,0 +1,70 @@
+syntax = "proto3";
+package bodega.shop;
+
+import "shop/shop.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/elliottpolk/bodega/shop";
+
+message Empty {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+}
+
+message Request {
+  // unique identifier to help troubleshoot each request
+  string request_id = 1;
+
+  // username of the one making the request
+  string username = 2;
+
+  // unique identifier of the Shop
+  string id = 3;
+
+  // dataset to process
+  repeated bodega.shop.Shop payload = 4;
+}
+
+message Response {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+
+  repeated bodega.shop.Shop payload = 2;
+}
+
+service Service {
+  // create new Shop item(s)
+  rpc Create(Request) returns (Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/shops"
+      body: "*"
+    };
+  }
+
+  // retrieve a list of Shop items
+  rpc Retrieve(Request) returns (Response) {
+    option (google.api.http) = {
+      get: "/api/v1/shops"
+
+      additional_bindings {
+        get: "/api/v1/shops/{id}"
+      }
+    };
+  }
+
+  // update Shop item(s)
+  rpc Update(Request) returns (Response) {
+    option (google.api.http) = {
+      put: "/api/v1/shops/{id}"
+      body: "*"
+    };
+  }
+
+  // delete Shop item(s)
+  rpc Delete(Request) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/shops"
+      body: "*"
+    };
+  }
+}

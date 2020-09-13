@@ -1,0 +1,39 @@
+syntax = "proto3";
+package bodega.purchase;
+
+import "record/info.proto";
+import "product/product.proto";
+import "shop/shop.proto";
+
+option go_package = "github.com/elliottpolk/bodega/purchase";
+
+message Money {
+  // The 3-letter currency code defined in ISO 4217.
+  string currency_code = 1;
+  double amount = 2;
+}
+
+message Weight {
+	string unit = 1;
+	double amount = 2;
+}
+
+message Purchase {
+  // standard record values
+  bodega.record.Info record_info = 1;
+
+  // unique identifier
+  string id = 2;
+
+  bodega.shop.Shop shop = 3;
+
+  bodega.product.Product product = 4;
+
+  int64 qty = 5;
+
+  Weight weight = 6;
+
+  Money price = 7;
+
+  string url = 8;
+}

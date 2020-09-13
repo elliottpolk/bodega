@@ -1,0 +1,70 @@
+syntax = "proto3";
+package bodega.purchase;
+
+import "purchase/purchase.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/elliottpolk/bodega/purchase";
+
+message Empty {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+}
+
+message Request {
+  // unique identifier to help troubleshoot each request
+  string request_id = 1;
+
+  // username of the one making the request
+  string username = 2;
+
+  // unique identifier of the Purchase
+  string id = 3;
+
+  // dataset to process
+  repeated bodega.purchase.Purchase payload = 4;
+}
+
+message Response {
+  // unique identifier of the original incoming request to help troubleshoot
+  string request_id = 1;
+
+  repeated bodega.purchase.Purchase payload = 2;
+}
+
+service Service {
+  // create new Purchase item(s)
+  rpc Create(Request) returns (Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/purchases"
+      body: "*"
+    };
+  }
+
+  // retrieve a list of Purchase items
+  rpc Retrieve(Request) returns (Response) {
+    option (google.api.http) = {
+      get: "/api/v1/purchases"
+
+      additional_bindings {
+        get: "/api/v1/purchases/{id}"
+      }
+    };
+  }
+
+  // update Purchase item(s)
+  rpc Update(Request) returns (Response) {
+    option (google.api.http) = {
+      put: "/api/v1/purchases/{id}"
+      body: "*"
+    };
+  }
+
+  // delete Purchase item(s)
+  rpc Delete(Request) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/purchases"
+      body: "*"
+    };
+  }
+}

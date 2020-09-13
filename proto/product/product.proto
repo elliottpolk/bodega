@@ -1,0 +1,17 @@
+syntax = "proto3";
+package bodega.product;
+
+import "record/info.proto";
+
+option go_package = "github.com/elliottpolk/bodega/product";
+
+message Product {
+  // standard record values
+  bodega.record.Info record_info = 1;
+
+  // unique identifier
+  string id = 2;
+
+  // name given to the product
+  string name = 3;
+}
