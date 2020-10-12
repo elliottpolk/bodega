@@ -2,7 +2,6 @@ package product
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/elliottpolk/bodega/record"
@@ -50,7 +49,6 @@ func Create(ctx context.Context, items []*Product, db *mongo.Database) error {
 
 	// write Product to datastore
 	if _, err := db.Collection(collection).InsertMany(context.TODO(), in); err != nil {
-		fmt.Println("shit")
 		return err
 	}
 
